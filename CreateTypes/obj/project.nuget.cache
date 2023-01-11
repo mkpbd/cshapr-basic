@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5SSL/bFYhTDKF9YJV/NQ3+n7SVn27MfytFVyOWFEMaq58+3FtBI/fVmfc9DoTh8YhewTDLsg+xPTFZtmo42iQA==",
+  "dgSpecHash": "w0UAaFWlXIfFs7UE0HAHBKdR65o32JiW8WlpjzBNpVpwpG5sq1BR8LM5pp9ArWo1Izre91hIjV2ygYaLU0D8EQ==",
   "success": true,
-  "projectFilePath": "D:\\BasicC#\\cc-11-01\\cshapr-basic\\CreateTypes\\CreateTypes.csproj",
+  "projectFilePath": "D:\\c#project\\BasicSharpWithBook\\csharp-basic\\CreateTypes\\CreateTypes.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
