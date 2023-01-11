@@ -78,4 +78,13 @@ namespace AdvanceCshapr.Classes
 
 
     }
+
+    public struct Nullable<T> where T : struct
+    {
+        public T Value { get; }
+        public bool HasValue { get; }
+        public T GetValueOrDefault() { return Value; }
+        public T GetValueOrDefault(T defaultValue){ return defaultValue; }
+
+    }
 }
