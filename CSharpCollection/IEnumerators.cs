@@ -14,8 +14,18 @@ namespace CSharpCollection
         void Reset();
     }
 
-    public interface IEnumerable
-    {
-        IEnumerator GetEnumerator();
-    }
+    //public interface IEnumerable
+    //{
+    //    IEnumerator GetEnumerator();
+    //}
+
+
+    //public interface IEnumerator<T> : IEnumerator, IDisposable
+    //{
+    //    T Current { get; }
+    //}
+    //public interface IEnumerable<T> : IEnumerable
+    //{
+    //    IEnumerator<T> GetEnumerator();
+    //}
 }

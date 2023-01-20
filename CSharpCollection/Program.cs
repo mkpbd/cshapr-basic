@@ -13,3 +13,7 @@ while (rator.MoveNext())
 
 foreach (char c in s)
     Console.Write(c + ".");
+
+
+int[] data = { 1, 2, 3 };
+var ratora = ((System.Collections.Generic.IEnumerable<int>)data).GetEnumerator();
