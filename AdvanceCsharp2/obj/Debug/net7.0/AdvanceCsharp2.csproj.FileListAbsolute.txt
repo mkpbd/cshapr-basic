@@ -1,0 +1,15 @@
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\bin\Debug\net7.0\AdvanceCsharp2.exe
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\bin\Debug\net7.0\AdvanceCsharp2.deps.json
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\bin\Debug\net7.0\AdvanceCsharp2.runtimeconfig.json
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\bin\Debug\net7.0\AdvanceCsharp2.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\bin\Debug\net7.0\AdvanceCsharp2.pdb
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\AdvanceCsharp2.csproj.AssemblyReference.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\AdvanceCsharp2.GeneratedMSBuildEditorConfig.editorconfig
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\AdvanceCsharp2.AssemblyInfoInputs.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\AdvanceCsharp2.AssemblyInfo.cs
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\AdvanceCsharp2.csproj.CoreCompileInputs.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\AdvanceCsharp2.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\refint\AdvanceCsharp2.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\AdvanceCsharp2.pdb
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\AdvanceCsharp2.genruntimeconfig.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\AdvanceCsharp2\obj\Debug\net7.0\ref\AdvanceCsharp2.dll
