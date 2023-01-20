@@ -89,5 +89,12 @@ namespace AdvanceCsharp2.EnumaratorIterators
             yield return "Three";
         }
 
+        IEnumerable<int> EvenNumbersOnly(IEnumerable<int> sequence)
+        {
+            foreach (int x in sequence)
+                if ((x % 2) == 0)
+                    yield return x;
+        }
+
     }
 }
