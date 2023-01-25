@@ -1,0 +1,15 @@
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\bin\Debug\net7.0\LinkqQuery.exe
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\bin\Debug\net7.0\LinkqQuery.deps.json
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\bin\Debug\net7.0\LinkqQuery.runtimeconfig.json
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\bin\Debug\net7.0\LinkqQuery.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\bin\Debug\net7.0\LinkqQuery.pdb
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\LinkqQuery.csproj.AssemblyReference.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\LinkqQuery.GeneratedMSBuildEditorConfig.editorconfig
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\LinkqQuery.AssemblyInfoInputs.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\LinkqQuery.AssemblyInfo.cs
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\LinkqQuery.csproj.CoreCompileInputs.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\LinkqQuery.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\refint\LinkqQuery.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\LinkqQuery.pdb
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\LinkqQuery.genruntimeconfig.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\LinkqQuery\obj\Debug\net7.0\ref\LinkqQuery.dll

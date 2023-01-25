@@ -1,0 +1,15 @@
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\bin\Debug\net7.0\Reflaction.exe
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\bin\Debug\net7.0\Reflaction.deps.json
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\bin\Debug\net7.0\Reflaction.runtimeconfig.json
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\bin\Debug\net7.0\Reflaction.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\bin\Debug\net7.0\Reflaction.pdb
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\Reflaction.csproj.AssemblyReference.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\Reflaction.GeneratedMSBuildEditorConfig.editorconfig
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\Reflaction.AssemblyInfoInputs.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\Reflaction.AssemblyInfo.cs
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\Reflaction.csproj.CoreCompileInputs.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\Reflaction.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\refint\Reflaction.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\Reflaction.pdb
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\Reflaction.genruntimeconfig.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\Reflaction\obj\Debug\net7.0\ref\Reflaction.dll

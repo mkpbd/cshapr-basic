@@ -1,0 +1,15 @@
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\bin\Debug\net7.0\FileInforamtion.exe
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\bin\Debug\net7.0\FileInforamtion.deps.json
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\bin\Debug\net7.0\FileInforamtion.runtimeconfig.json
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\bin\Debug\net7.0\FileInforamtion.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\bin\Debug\net7.0\FileInforamtion.pdb
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\FileInforamtion.csproj.AssemblyReference.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\FileInforamtion.GeneratedMSBuildEditorConfig.editorconfig
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\FileInforamtion.AssemblyInfoInputs.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\FileInforamtion.AssemblyInfo.cs
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\FileInforamtion.csproj.CoreCompileInputs.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\FileInforamtion.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\refint\FileInforamtion.dll
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\FileInforamtion.pdb
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\FileInforamtion.genruntimeconfig.cache
+D:\c#project\BasicSharpWithBook\csharp-basic\FileInforamtion\obj\Debug\net7.0\ref\FileInforamtion.dll
