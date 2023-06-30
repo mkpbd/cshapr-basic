@@ -55,3 +55,24 @@ int x = 2022;
 message = message + x.ToString();
 Console.WriteLine (message); // Hello world2022
 ```
+
+C# type System type Suffix Size Range
+
+| Integral—signed                                                            |
+| --------------------------------------------------------------------------- |
+| sbyte SByte 8 bits      –2 to 2 –1                                     |
+| short Int16 16 bits     –2 to 2 –1                                     |
+| int Int32 32 bits     –2 to 2 –1long Int64 L 64 bits    –2 to 2 –1 |
+| nint IntPtr 32/64 bits                                                      |
+| Integral—unsigned                                                          |
+| byte Byte 8 bits   0 to 2 –1                                             |
+| ushort UInt16 16 bits 0 to 2 –1                                            |
+| uint UInt32 U 32 bits 0 to 2 –1                                            |
+| ulong UInt64 UL 64 bits 0 to 2 –1                                          |
+| unint UIntPtr 32/64 bits                                                    |
+| Real                                                                        |
+| float Single F 32 bits ± (~10 to 10 )                                      |
+| double Double D 64 bits ± (~10 to 10 )                                     |
+| decimal Decimal M 128 bits ± (~10 to 10 )                                  |
+
+![1688144591958](image/readme/1688144591958.png)
