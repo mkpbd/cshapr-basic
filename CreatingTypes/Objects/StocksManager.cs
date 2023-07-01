@@ -1,6 +1,6 @@
 namespace Objects
 {
-    public class Stock
+    public class StocksManager
     {
         decimal currentPrice; // The private "backing" field
         public decimal CurrentPrice // The public property

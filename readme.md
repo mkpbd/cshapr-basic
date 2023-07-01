@@ -365,3 +365,39 @@ string name = nameof (StringBuilder.Length);
 ```
 
 ## Inheritance
+
+A class can inherit from another class to extend or customize the original class. Inheriting from a class lets you reuse the functionality in that class instead of building it from scratch. A class can inherit from only a single class but can itself be inherited by many classes, thus forming a class hierarchy. In this example, we begin by defining a class called Asset:
+
+```csharp
+public class Asset
+{
+ public string Name;
+}
+public class Stock : Asset // inherits from Asset
+{
+   public long SharesOwned;
+}
+public class House : Asset // inherits from Asset
+{
+  public decimal Mortgage;
+}
+
+Stock msft = new Stock { Name="MSFT",SharesOwned=1000 };
+Console.WriteLine (msft.Name); // MSFT
+Console.WriteLine (msft.SharesOwned); // 1000
+House mansion = new House { Name="Mansion", Mortgage=250000 };
+Console.WriteLine (mansion.Name); // Mansion
+Console.WriteLine (mansion.Mortgage); // 250000
+
+```
+
+Polymorphism
+
+References are polymorphic. This means a variable of type x can refer to an object that subclasses x. For instance, consider the following method:
+
+```csharp
+public static void Display (Asset asset)
+{
+System.Console.WriteLine (asset.Name);
+}
+```
