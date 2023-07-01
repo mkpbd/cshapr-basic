@@ -1,6 +1,8 @@
 ﻿using Method;
 using Objects;
 using Inheritance;
+using ImplementInterface;
+using Interfaces;
 
 var rect = new Rectangle(3, 4);
 (float width, float height) = rect; // Deconstruction
@@ -39,17 +41,21 @@ Console.WriteLine(mansion.Name); // Mansion
 Console.WriteLine(mansion.Mortgage); // 250000
 
 
-House mansion = new House { Name = "McMansion", Mortgage = 250000 };
-Asset a = mansion;
+House mansion1 = new House { Name = "McMansion", Mortgage = 250000 };
+Asset a = mansion1;
 Console.WriteLine(mansion.Liability); // 250000
 Console.WriteLine(a.Liability); // 250000
 
 
 Overrider over = new Overrider();
-BaseClass b1 = over;
+BaseClass b11 = over;
 over.Foo(); // Overrider.Foo
-b1.Foo(); // Overrider.Foo
+b11.Foo(); // Overrider.Foo
 Hider h = new Hider();
-BaseClass b2 = h;
+BaseClass b21 = h;
 h.Foo(); // Hider.Foo
-b2.Foo(); // BaseClass.Foo
+b21.Foo(); // BaseClass.Foo
+
+IEnumeratorByOwn e = new Countdown();
+while (e.MoveNext())
+    Console.Write(e.Current); // 109876543210

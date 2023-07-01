@@ -6,7 +6,7 @@ namespace Inheritance
         public override decimal Liability => SharesOwned;
 
         // Override like a virtual method.
-        public override decimal NetValue => CurrentPrice * SharesOwned;
+        public override decimal NetValue => 3 * SharesOwned;
         public static void Display(Asset asset)
         {
             System.Console.WriteLine(asset.Name);
