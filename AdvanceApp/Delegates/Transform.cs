@@ -13,5 +13,14 @@ namespace AdvanceApp.Delegates
             return x * x;
         }
         public int Square1(int x) => x * x;
+
+        public void TransformDelegate(int[] values, Transformer t)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                values[i] = t(values[i]);
+            }
+
+        }
     }
 }
