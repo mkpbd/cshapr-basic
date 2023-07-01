@@ -3,7 +3,7 @@ using Objects;
 using Inheritance;
 using ImplementInterface;
 using Interfaces;
-
+using CreatingTypes.Enums;
 var rect = new Rectangle(3, 4);
 (float width, float height) = rect; // Deconstruction
 Console.WriteLine(width + " " + height); // 3 4
@@ -57,5 +57,9 @@ h.Foo(); // Hider.Foo
 b21.Foo(); // BaseClass.Foo
 
 IEnumeratorByOwn e = new Countdown();
-while (e.MoveNext())
-    Console.Write(e.Current); // 109876543210
+while (e.MoveNext()) Console.Write(e.Current); // 109876543210
+
+
+BorderSide topSide = BorderSide.Top;
+bool isTop = (topSide == BorderSide.Top); // true
+
