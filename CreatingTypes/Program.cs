@@ -4,6 +4,7 @@ using Inheritance;
 using ImplementInterface;
 using Interfaces;
 using CreatingTypes.Enums;
+using CreatingTypes.Generics;
 var rect = new Rectangle(3, 4);
 (float width, float height) = rect; // Deconstruction
 Console.WriteLine(width + " " + height); // 3 4
@@ -63,3 +64,10 @@ while (e.MoveNext()) Console.Write(e.Current); // 109876543210
 BorderSide topSide = BorderSide.Top;
 bool isTop = (topSide == BorderSide.Top); // true
 
+
+
+var stack = new StackLLF<int>();
+stack.Push(5);
+stack.Push(10);
+int x = stack.Pop(); // x is 10
+int y = stack.Pop(); // y is 5
