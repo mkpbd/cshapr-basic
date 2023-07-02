@@ -19,5 +19,12 @@ namespace AdvanceApp.Delegates
         {
             return o is string s && s.Length > 20;
         }
+        public static int GetIndexOfFirstNonEmptyBin(int[] bins)
+        {
+            return Array.FindIndex(
+            bins,
+            delegate (int value) { return value > 0; }
+            );
+        }
     }
 }
