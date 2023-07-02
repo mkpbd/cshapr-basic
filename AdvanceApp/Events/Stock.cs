@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace AdvanceApp.Events
 {
-    public delegate void PriceChangedHandlerDel(decimal oldPrice,
-decimal newPrice);
+    public delegate void PriceChangedHandlerDel(decimal oldPrice, decimal newPrice);
+
     public class Stock
     {
         string symbol;

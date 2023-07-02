@@ -38,3 +38,17 @@ void WriteProgressToConsole(int percentComplete)
 void WriteProgressToFile(int percentComplete)
 => System.IO.File.WriteAllText("progress.txt",
 percentComplete.ToString());
+
+
+var zeroThreshold = new ThresholdComparer { Threshold = 0 };
+var tenThreshold = new ThresholdComparer { Threshold = 10 };
+var hundredThreshold = new ThresholdComparer { Threshold = 100 };
+Predicates<int> greaterThanZero = zeroThreshold.IsGreaterThan;
+Predicates<int> greaterThanTen = tenThreshold.IsGreaterThan;
+Predicates<int> greaterThanOneHundred = hundredThreshold.IsGreaterThan;
+
+ThresholdComparer.CallMeRightBack(greaterThanZero);
+
+Predicate<object> po = ThresholdComparer.IsLongString;
+Predicate<string> ps = po;
+Console.WriteLine(ps("Too short"));
