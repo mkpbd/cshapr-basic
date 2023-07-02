@@ -26,5 +26,17 @@ namespace Delegates.Del
         public void WriteProgressToConsole(int percentComplete) => Console.WriteLine(percentComplete);
         public void WriteProgressToFile(int percentComplete) => System.IO.File.WriteAllText("progress.txt",
             percentComplete.ToString());
+
+        public static void Transform1<T>(T[] values, Transformer1<T> t)
+        {
+            for (int i = 0; i < values.Length; i++)
+                values[i] = t(values[i]);
+        }
+
+        public static void Transform3<T>(T[] values, Func<T, T> transformer)
+        {
+            for (int i = 0; i < values.Length; i++)
+                values[i] = transformer(values[i]);
+        }
     }
 }
