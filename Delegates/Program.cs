@@ -21,6 +21,14 @@ Console.WriteLine(p.Method); // Void ReportProgress(Int32)
 r.Prefix = "";
 p(99);
 
+StringAction sa = new StringAction(new Utility().ActOnObject);
+sa("hello string");
+
+
 ProgressReporter pp = new Utility().WriteProgressToConsole;
 pp += new Utility().WriteProgressToFile;
 Utility.HardWork(pp);
+
+ObjectRetriever o = new ObjectRetriever(new Utility().RetriveString);
+object results = o();
+Console.WriteLine(results); // hello

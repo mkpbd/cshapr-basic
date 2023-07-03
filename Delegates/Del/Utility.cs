@@ -38,5 +38,8 @@ namespace Delegates.Del
             for (int i = 0; i < values.Length; i++)
                 values[i] = transformer(values[i]);
         }
+
+        public string RetriveString() => "hello";
+        public void ActOnObject(object o) => Console.WriteLine(o); // hello
     }
 }
