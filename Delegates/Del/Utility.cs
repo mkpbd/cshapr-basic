@@ -41,5 +41,21 @@ namespace Delegates.Del
 
         public string RetriveString() => "hello";
         public void ActOnObject(object o) => Console.WriteLine(o); // hello
+
+        public static int GetIndexOfFirstNonEmptyBin(int[] bins) =>
+                            Array.FindIndex(bins, IsGreaterThanZero);
+        public static bool IsGreaterThanZero(int value) => value > 0;
+        public static bool IsLessThanZero(int value) => value < 0;
+
+        public static void CallMeRightBack(Predicate<int> userCallback)
+        {
+            bool result = userCallback(42);
+            Console.WriteLine(result);
+        }
+
+        public static bool IsLongString(object o)
+        {
+            return o is string s && s.Length > 20;
+        }
     }
 }

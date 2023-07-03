@@ -6,4 +6,5 @@ namespace Delegates.Del
 
     public delegate object ObjectRetriever();
     public delegate void StringAction(string s);
+    public delegate bool PredicateDel<in T>(T obj);
 }

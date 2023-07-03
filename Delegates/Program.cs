@@ -32,3 +32,23 @@ Utility.HardWork(pp);
 ObjectRetriever o = new ObjectRetriever(new Utility().RetriveString);
 object results = o();
 Console.WriteLine(results); // hello
+
+
+/// 
+var ppp = new PredicateDel<int>(Utility.IsGreaterThanZero);
+
+Console.WriteLine(ppp(10));
+
+
+var zeroThreshold = new ThresholdComparer { Threshold = 0 };
+var tenThreshold = new ThresholdComparer { Threshold = 10 };
+var hundredThreshold = new ThresholdComparer { Threshold = 100 };
+PredicateDel<int> greaterThanZero = zeroThreshold.IsGreaterThan;
+PredicateDel<int> greaterThanTen = tenThreshold.IsGreaterThan;
+PredicateDel<int> greaterThanOneHundred = hundredThreshold.IsGreaterThan;
+
+Console.WriteLine(greaterThanOneHundred(101));
+
+PredicateDel<object> po = Utility.IsLongString;
+PredicateDel<string> ps = po;
+Console.WriteLine(ps("Too short"));
