@@ -112,3 +112,179 @@ Because the type parameter for these interfaces is used only in output positions
 
 *These interfaces represent a read-only view of a collection or list; the underlying implementation
 might still be writable. Most of the writable (mutable) collections implement both the read-only and read/write interfaces*
+
+**The Array Class**
+
+The Array class is the implicit base class for all single and multidimensional arrays, and it is one of the most fundamental types implementing the standard collection interfaces. The Array class provides type unification, so a common set of methods is available to all arrays, regardless of their declaration or underlying element type.
+
+The CLR also treats array types specially upon construction, assigning them a contiguous space in memory. This makes indexing into arrays highly efficient, but prevents them from being resized later on.
+
+Array implements the collection interfaces up to IList `<T>` in both their generic and nongeneric forms. IList `<T>` itself is implemented explicitly, though, to keep Array’s public interface clean of methods such as Add or Remove, which throw an exception on fixed-length collections such as arrays.
+The Array class does actually offer a static Resize method, although this works by creating a new array and then copying over each element. As well as being inefficient, references to the array elsewhere in the program will still point to the original version. A better solution for resizable collections is to use the List `<T>` class
+
+An array can contain value-type or reference-type elements. Value-type elements are stored in place in the array, so an array of three long integers (each 8 bytes) will occupy 24 bytes of contiguous memory. A reference type element, however, occupies only as much space in the array as a reference (4 bytes in a 32-bit environment or 8 bytes in a 64-bit environment).
+
+```csharp
+StringBuilder[] builders = new StringBuilder [5];
+builders [0] = new StringBuilder ("builder1");
+builders [1] = new StringBuilder ("builder2");
+builders [2] = new StringBuilder ("builder3");
+long[] numbers = new long [3];
+numbers [0] = 12345;
+numbers [1] = 54321;
+```
+
+Because Array is a class, arrays are always (themselves) reference types— regardless of the array’s element type. This means that the statement arrayB = arrayA results in two variables that reference the same array. Similarly, two distinct arrays will always fail an equality test, unless you employ a structural equality comparer, which compares every element of the array:
+
+```csharp
+object[] a1 = { "string", 123, true };
+object[] a2 = { "string", 123, true };
+Console.WriteLine (a1 == a2); // False
+Console.WriteLine (a1.Equals (a2)); // False
+IStructuralEquatable se1 = a1;
+Console.WriteLine (se1.Equals (a2,
+StructuralComparisons.StructuralEqualityComparer)); // True
+```
+
+**Construction and Indexing**
+
+The easiest way to create and index arrays is through C#’s language constructs:
+
+```csharp
+int[] myArray = { 1, 2, 3 };
+int first = myArray [0];
+int last = myArray [myArray.Length - 1];
+```
+
+The GetValue and SetValue methods let you access elements in a dynamically created array (they also work on ordinary arrays):
+
+```csharp
+// Create a string array 2 elements in length:
+Array a = Array.CreateInstance (typeof(string), 2);
+a.SetValue ("hi", 0); // → a[0] = "hi";
+a.SetValue ("there", 1); // → a[1] = "there";
+string s = (string) a.GetValue (0); // → s = a[0];
+// We can also cast to a C# array as follows:
+string[] cSharpArray = (string[]) a;
+string s2 = cSharpArray [0];
+```
+
+```csharp
+public object GetValue (params int[] indices)
+public void SetValue (object value, params int[] indices)
+
+void WriteFirstValue (Array a)
+{
+Console.Write (a.Rank + "-dimensional; ");
+// The indexers array will automatically initialize to all zeros, so
+// passing it into GetValue or SetValue will get/set the zero-based
+// (i.e., first) element in the array.
+int[] indexers = new int[a.Rank];
+Console.WriteLine ("First value is " + a.GetValue (indexers));
+}
+void Demo()
+{
+int[] oneD = { 1, 2, 3 };
+int[,] twoD = { {5,6}, {8,9} };
+WriteFirstValue (oneD); // 1-dimensional; first value is 1
+WriteFirstValue (twoD); // 2-dimensional; first value is 5
+}
+```
+
+**Enumeration**
+
+Arrays are easily enumerated with a foreach statement
+
+```csharp
+int[] myArray = { 1, 2, 3};
+foreach (int val in myArray)
+Console.WriteLine (val);
+```
+
+You can also enumerate using the static Array.ForEach method, defined asfollows:
+***public static void ForEach `<T>` (T[] array, Action `<T>` action);***
+This uses an Action delegate, with this signature:
+***public delegate void Action `<T>` (T obj);***
+Here’s the first example rewritten with Array.ForEach:
+*Array.ForEach (new[] { 1, 2, 3 }, Console.WriteLine);*
+
+**Length and Rank**
+
+```csharp
+public int GetLength (int dimension);
+public long GetLongLength (int dimension);
+public int Length { get; }
+public long LongLength { get; }
+public int GetLowerBound (int dimension);
+public int GetUpperBound (int dimension);
+public int Rank { get; } // Returns number of dimensions in array
+```
+
+**Searching**
+
+The Array class offers a range of methods for finding elements within a onedimensional array: BinarySearch methods
+     For rapidly searching a sorted array for a particular item
+*IndexOf/LastIndex methods*
+For searching unsorted arrays for a particular item
+*Find/FindLast/FindIndex/FindLastIndex/FindAll/Exists/TrueForAll*
+For searching unsorted arrays for item(s) that satisfy a given
+Predicate `<T>`
+
+ordering algorithm will be applied based on its implementation of *IComparable / IComparable `<T>`.*
+
+*public delegate bool Predicate `<T>` (T object);*
+
+```csharp
+string[] names = { "Rodney", "Jack", "Jill" };
+string match = Array.Find (names, ContainsA);
+Console.WriteLine (match); // Jack
+ContainsA (string name) { return name.Contains ("a"); }
+```
+
+```csharp
+string[] names = { "Rodney", "Jack", "Jill" };
+string match = Array.Find (names, n => n.Contains ("a")); // Jack
+```
+
+***Sorting***
+
+Array has the following built-in sorting methods
+
+```csharp
+// For sorting a single array:
+public static void Sort `<T>` (T[] array);
+public static void Sort (Array array);
+// For sorting a pair of arrays:
+public static void Sort<TKey,TValue> (TKey[] keys, TValue[] items);
+public static void Sort (Array keys, Array items);
+```
+
+```csharp
+int index // Starting index at which to begin sorting
+int length // Number of elements to sort
+IComparer<T> comparer // Object making ordering decisions
+Comparison<T> comparison // Delegate making ordering decisions
+//The following illustrates the simplest use of Sort:
+int[] numbers = { 3, 2, 1 };
+Array.Sort (numbers); // Array is now { 1, 2, 3
+```
+
+```csharp
+int[] numbers = { 3, 2, 1 };
+string[] words = { "three", "two", "one" };
+Array.Sort (numbers, words);
+// numbers array is now { 1, 2, 3 }
+// words array is now { "one", "two", "three" }
+```
+
+***Converting and Resizing***
+
+Array.ConvertAll creates and returns a new array of element type TOutput, calling the supplied Converter delegate to copy over the elements. Converter is defined as follows:
+
+***public delegate TOutput Converter<TInput,TOutput> (TInput input)***
+
+```csharp
+float[] reals = { 1.3f, 1.5f, 1.8f };
+int[] wholes = Array.ConvertAll (reals, r => Convert.ToInt32 (r));
+// wholes array is { 1, 2, 2 }
+```
