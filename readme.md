@@ -464,3 +464,57 @@ foreach (int n in query) Console.Write (n + "|"); // 20|40|
 ```
 
 This can be a trap when building up a query within a for loop. For example, suppose that we want to remove all vowels from a string. The following, although inefficient, gives the correct result:
+
+***How Deferred Execution Works***
+
+Query operators provide deferred execution by returning decorator sequences.
+
+Unlike a traditional collection class such as an array or linked list, a decorator sequence (in general) has no backing structure of its own to store elements.
+
+Instead, it wraps another sequence that you supply at runtime, to which it maintains a permanent dependency. Whenever you request data from a decorator, it in turn must request data from the wrapped input sequence.
+
+```csharp
+IEnumerable<int> lessThanTen = new int[] { 5, 12, 3 }.Where (n => n < 10);
+```
+
+![1688573435744](image/readme/1688573435744.png)
+
+**Chaining Decorators**
+
+Chaining query operators creates a layering of decorators. Consider the following query:
+
+```csharp
+IEnumerable<int> query = new int[] { 5, 12, 3 }.Where (n => n < 10)
+.OrderBy (n => n)
+.Select (n => n * 10);
+```
+
+![1688573740045](image/readme/1688573740045.png)
+
+When you enumerate query, you’re querying the original array, transformed through a layering or chain of decorators.
+
+*Adding ToList onto the end of this query would cause the preceding operators to execute immediately, collapsing the whole object model into a single list*
+
+**Select's** decorator references the **OrderBy** decorator, which references **Where's** decorator, which references the **array**.
+A feature of deferred execution is that you build the identical object model if you compose the query progressively:
+
+```csharp
+IEnumerable<int>
+source = new int[] { 5, 12, 3 },
+filtered = source .Where (n => n < 10),
+sorted = filtered .OrderBy (n => n),
+query = sorted .Select (n => n * 10);
+```
+
+![1688573980261](image/readme/1688573980261.png)
+
+**How Queries Are Executed**
+
+Here are the results of enumerating the preceding query
+
+```csharp
+foreach (int n in query) Console.WriteLine (n);
+```
+
+Behind the scenes, the foreach calls **GetEnumerator** on **Select's** decorator (the last or outermost operator), which kicks off everything. The
+result is a chain of enumerators that structurally mirrors the chain of  decorator sequences.![1688575942693](image/readme/1688575942693.png)
