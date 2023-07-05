@@ -33,3 +33,13 @@ int[] seq1 = { 1, 2, 3 };
 int[] seq2 = { 3, 4, 5 };
 IEnumerable<int> concat = seq1.Concat(seq2); // { 1, 2, 3, 3, 4, 5 }
 IEnumerable<int> union = seq1.Union(seq2); // { 1, 2, 3, 4, 5 }
+
+// mixed query syntax and fluent syntax
+int matches = (from n in names where n.Contains("a") select n).Count();
+string first = (from n in names orderby n select n).First(); // Dick
+
+// decorator pattern
+IEnumerable<int> lessThanTen = new int[] { 5, 12, 3 }.Where(n => n < 10);
+IEnumerable<int> queryDecorator = new int[] { 5, 12, 3 }.Where(n => n < 10)
+.OrderBy(n => n)
+.Select(n => n * 10);

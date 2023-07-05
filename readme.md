@@ -295,3 +295,172 @@ int[] seq2 = { 3, 4, 5 };
 IEnumerable<int> concat = seq1.Concat (seq2); // { 1, 2, 3, 3, 4, 5 }
 IEnumerable<int> union = seq1.Union (seq2); // { 1, 2, 3, 4, 5 }
 ```
+
+## Query Expressions
+
+C# provides a syntactic shortcut for writing LINQ queries, called query expressions. Contrary to popular belief, a query expression is not a means of embedding SQL into C#.
+
+In the preceding section, we wrote a fluent-syntax query to extract strings containing the letter “a”, sorted by length and converted to uppercase. Here's the same thing in query syntax
+
+```csharp
+ string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+            IEnumerable<string> query =
+                    from n in names
+                    where n.Contains("a") // Filter elements
+                    orderby n.Length // Sort elements
+                    select n.ToUpper(); // Translate each element  (project)
+
+            foreach (string name in query) Console.WriteLine(name);
+```
+
+Query expressions always start with a from clause and end with either a select or group clause. The from clause declares a range variable (in this case, n), which you can think of as traversing the input sequence—rather like  ***foreach***.
+
+*To read this diagram, start at the left and then proceed along the track as if you were a train. For instance, after the mandatory from clause, you can optionally include an orderby, where, let, or join clause. After that, you can either continue with a select or group clause, or go back and include another from, orderby, where, let, or join clause.*
+
+![1688567833321](image/readme/1688567833321.png)
+
+The compiler processes a query expression by translating it into fluent syntax.
+
+ It does this in a fairly mechanical fashion—much like it translates foreach statements into calls to GetEnumerator and MoveNext. This means that anything you can write in query syntax you can also write in fluent syntax. The compiler (initially) translates our example query into the following:
+
+```csharp
+IEnumerable<string> query = names.Where (n => n.Contains ("a"))
+.OrderBy (n => n.Length)
+.Select (n => n.ToUpper());
+```
+
+*Range Variables*
+
+The identifier immediately following the from keyword syntax is called the range variable.
+
+A range variable refers to the current element in the sequence on which the operation is to be performed
+
+In our examples, the range variable n appears in every clause in the query. And yet, the variable actually enumerates over a different sequence with each clause:
+
+```csharp
+from n in names // n is our range variable
+where n.Contains ("a") // n = directly from the array
+orderby n.Length // n = subsequent to being filtered
+select n.ToUpper() // n = subsequent to being sorted
+```
+
+This becomes clear when we examine the compiler’s mechanical translation to fluent syntax:
+
+```csharp
+var rr = names.Where (n => n.Contains ("a")) // Locally scoped n
+.OrderBy (n => n.Length) // Locally scoped n
+.Select (n => n.ToUpper()) // Locally scoped n
+```
+
+As you can see, each instance of n is scoped privately to its own lambda expression
+
+Query expressions also let you introduce new range variables via the following clauses:
+
+1. **let**
+2. **into**
+3. An additional **from** clause
+4. **join**
+
+**Query Syntax Versus SQL Syntax**
+
+Query expressions look superficially like SQL, yet the two are very different. A LINQ query boils down to a C# expression, and so follows standard C# rules.
+
+ For example, with LINQ, you cannot use a variable before you declare it. In SQL, you can reference a table alias in the SELECT clause before defining it in a FROM clause.
+
+A subquery in LINQ is just another C# expression and so requires no special syntax. Subqueries in SQL are subject to special rules.
+
+With LINQ, data logically flows from left to right through the query. With SQL, the order is less well structured with regard to data flow.
+
+A LINQ query comprises a conveyor belt or pipeline of operators that accept and emit sequences whose element order can matter. An SQL query comprises a network of clauses that work mostly with unordered sets.
+
+**Query Syntax Versus Fluent Syntax**
+
+Query and fluent syntax each have advantages.
+Query syntax is simpler for queries that involve any of the following:
+
+1. A let clause for introducing a new variable alongside the range variable
+2. SelectMany, Join, or GroupJoin, followed by an outer range variable reference
+
+***Where, Select, SelectMany OrderBy, ThenBy, OrderByDescending, ThenByDescending GroupBy, Join, GroupJoin***
+
+### Mixed-Syntax Queries
+
+If a query operator has no query-syntax support, you can mix query syntax and fluent syntax. The only restriction is that each query-syntax component must be complete (i.e., start with a from clause and end with a select or group clause). Assuming this array declaration
+
+string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+
+the following example counts the number of names containing the letter “a”:
+
+```csharp
+int matches = (from n in names where n.Contains ("a") select n).Count();
+// 3
+string first = (from n in names orderby n select n).First(); // Dick
+```
+
+The mixed-syntax approach is sometimes beneficial in more complex queries. With these simple examples, however, we could stick to fluent syntax throughout without penalty:
+
+**Deferred Execution**
+
+An important feature of most query operators is that they execute not when constructed but when enumerated (in other words, when MoveNext is called on its enumerator). Consider the following query:
+
+```csharp
+var numbers = new List<int> { 1 };
+IEnumerable<int> query = numbers.Select (n => n * 10); // Build query
+numbers.Add (2); // Sneak in an extra element
+foreach (int n in query)
+Console.Write (n + "|"); // 10|20|
+```
+
+This is called deferred or lazy execution and is the same as what happens with delegates:
+
+All standard query operators provide deferred execution, with the following exceptions:
+
+1. Operators that return a single element or scalar value, such as **First or Count**
+2. The following conversion operators:
+
+ToArray, ToList, ToDictionary, ToLookup, ToHashSet
+
+These operators cause immediate query execution because their result types have no mechanism to provide deferred execution. The Count method, for instance, returns a simple integer, which doesn’t then get enumerated. The following query is executed immediately:
+
+```csharp
+int matches = numbers.Where (n => n <= 2).Count(); // 1
+```
+
+Deferred execution is important because it decouples query construction from query execution. This allows you to construct a query in several steps and also makes database queries possible.
+
+***Subqueries provide another level of indirection. Everything in a subquery is subject to deferred execution, including aggregation and conversion methods.***
+
+***Reevaluation***
+
+Deferred execution has another consequence: a deferred execution query is reevaluated when you reenumerate:
+
+```csharp
+var numbers = new List<int>() { 1, 2 };
+IEnumerable<int> query = numbers.Select (n => n * 10);
+foreach (int n in query) Console.Write (n + "|"); // 10|20|
+numbers.Clear();
+foreach (int n in query) Console.Write (n + "|"); // <nothing
+```
+
+```csharp
+ var numbers = new List<int>() { 1, 2 };
+            List<int> timesTen = numbers
+            .Select(n => n * 10)
+            .ToList(); // Executes immediately into a List<int>
+            numbers.Clear();
+            Console.WriteLine(timesTen.Count); // Still
+```
+
+Captured Variables
+
+If your query’s lambda expressions capture outer variables, the query will honor the value of those variables at the time the query runs:
+
+```csharp
+int[] numbers = { 1, 2 };
+int factor = 10;
+IEnumerable<int> query = numbers.Select (n => n * factor);
+factor = 20;
+foreach (int n in query) Console.Write (n + "|"); // 20|40|
+```
+
+This can be a trap when building up a query within a for loop. For example, suppose that we want to remove all vowels from a string. The following, although inefficient, gives the correct result:
