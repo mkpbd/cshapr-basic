@@ -108,11 +108,135 @@ foreach (char c in "string3") Console.Write (c);
 }
 ```
 
-Where, OrderBy, and Select are standard query operators that resolve to extension methods in the Enumerable class
+*Where*, *OrderBy*, and *Select* are standard query operators that resolve to extension methods in the Enumerable class
 
 ```csharp
 // You must import the System.Linq namespace for this to compile:
 IEnumerable<string> filtered = names .Where (n => n.Contains ("a"));
 IEnumerable<string> sorted = filtered.OrderBy (n => n.Length);
 IEnumerable<string> finalQuery = sorted .Select (n => n.ToUpper());
+```
+
+We already introduced the Where operator, which emits a filtered version of the input sequence. The OrderBy operator emits a sorted version of its input sequence; the Select method emits a sequence in which each input element is transformed or projected with a given lambda expression (n.ToUpper(),in this case). Data flows from left to right through the chain of operators, so the data is first filtered, then sorted, and then projected.
+
+*A query operator never alters the input sequence; instead, it returns a new sequence. This is consistent with the functional programming paradigm from which LINQ was inspired.*
+
+```csharp
+public static IEnumerable<TSource> Where<TSource>
+(this IEnumerable<TSource> source, Func<TSource,bool> predicate)
+public static IEnumerable<TSource> OrderBy<TSource,TKey>
+(this IEnumerable<TSource> source, Func<TSource,TKey> keySelector)
+public static IEnumerable<TResult> Select<TSource,TResult>
+(this IEnumerable<TSource> source, Func<TSource,TResult> selector)
+```
+
+![1688565339462](image/readme/1688565339462.png)
+
+```csharp
+// You must import the System.Linq namespace for this to compile:
+IEnumerable<string> filtered = names .Where (n => n.Contains ("a"));
+IEnumerable<string> sorted = filtered.OrderBy (n => n.Length);
+IEnumerable<string> finalQuery = sorted .Select (n => n.ToUpper());
+```
+
+finalQuery is compositionally identical to the query we constructed previously. Further, each intermediate step also comprises a valid query that we can execute
+
+```csharp
+              foreach (string name in filtered)
+                Console.Write(name + "|"); // Harry|Mary|Jay|
+
+            Console.WriteLine();
+
+            foreach (string name in sorted)
+                Console.Write(name + "|"); // Jay|Mary|Harry|
+
+            Console.WriteLine();
+```
+
+**Why extension methods are important**
+
+Instead of using extension method syntax, you can use conventional static method syntax to call the query operators:
+
+```csharp
+IEnumerable<string> filtered = Enumerable.Where(names, n => n.Contains("a"));
+            IEnumerable<string> sorted = Enumerable.OrderBy(filtered, n => n.Length);
+            IEnumerable<string> finalQuery = Enumerable.Select(sorted, n => n.ToUpper());
+
+            // same as  query chaining 
+            IEnumerable<string> query = names.Where(n => n.Contains("a"))
+                        .OrderBy(n => n.Length)
+                        .Select(n => n.ToUpper());
+```
+
+Its natural linear shape reflects the left-to-right flow of data and also keeps lambda expressions alongside their query operators (infix notation). Without extension methods, the query loses its fluency:
+
+```csharp
+IEnumerable<string> query =
+   Enumerable.Select (
+      Enumerable.OrderBy (
+        Enumerable.Where (
+       names, n => n.Contains ("a")
+      ), n => n.Length
+    ), n => n.ToUpper()
+);
+```
+
+**Composing Lambda Expressions**
+
+In previous examples, we fed the following lambda expression to the Where operator:
+
+n => n.Contains ("a") // Input type = string, return type = bool.
+
+*A lambda expression that takes a value and returns a bool is called a predicate*
+
+A lambda expression in a query operator always works on individual elements in the input sequence
+—not the sequence as a whole.
+
+```csharp
+public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, Func<TSource,bool> predicate)
+{
+     foreach (TSource element in source)
+         if (predicate (element))  
+           yield return element;
+}
+```
+
+**Lambda expressions and Func signatures**
+
+The standard query operators utilize generic Func delegates. Func is a family of general-purpose generic delegates in the System namespace, defined with the following intent:
+
+*The type arguments in Func appear in the same order they do in lambda expressions.*
+
+**Lambda expressions and element typing**
+
+| Generic type letter | Meaning                                                          |
+| ------------------- | ---------------------------------------------------------------- |
+| TSource             | Element type for the input sequence                              |
+| TResult             | Element type for the output sequence (if different from TSource) |
+| TKey                | Element type for the key used in sorting, grouping, or joining   |
+
+TSource is determined by the input sequence. TResult and TKey are typically inferred from your lambda expression.
+
+public static IEnumerable `<TResult>` Select<TSource,TResult>
+(this IEnumerable `<TSource>` source, Func<TSource,TResult> selector)
+
+```csharp
+string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+IEnumerable<int> query = names.Select (n => n.Length);
+         foreach (int length in query)
+            Console.Write (length + "|"); // 3|4|5|4|3|
+```
+
+public static IEnumerable `<TSource>` Where `<TSource>`
+(this IEnumerable `<TSource>` source, Func<TSource,bool> predicate)
+
+// Slightly simplified:
+public static IEnumerable `<TSource>` OrderBy<TSource,TKey>
+(this IEnumerable `<TSource>` source, Func<TSource,TKey> keySelector)
+
+```csharp
+string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+IEnumerable<string> sortedByLength, sortedAlphabetically;
+sortedByLength = names.OrderBy (n => n.Length); // int key
+sortedAlphabetically = names.OrderBy (n => n);
 ```
