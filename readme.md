@@ -288,3 +288,61 @@ float[] reals = { 1.3f, 1.5f, 1.8f };
 int[] wholes = Array.ConvertAll (reals, r => Convert.ToInt32 (r));
 // wholes array is { 1, 2, 2 }
 ```
+
+***List `<T>` and ArrayList***
+
+The generic List and nongeneric ArrayList classes provide a dynamically sized array of objects and are among the most commonly used of the collection classes. ArrayList implements IList, whereas List `<T>`
+
+implements both IList and IList `<T>` (and the read-only version, IReadOnlyList `<T>`). Unlike with arrays, all interfaces are implemented publicly, and methods such as Add and Remove are exposed and work as you would expect.
+
+*List `<T>` is up to several times faster than ArrayList if T is a value type, because List `<T>` avoids the overhead of boxing and unboxing elements.*
+
+```csharp
+public class List<T> : IList<T>, IReadOnlyList<T>
+{
+public List ();
+public List (IEnumerable<T> collection);
+public List (int capacity);
+// Add+Insert
+public void Add (T item);
+public void AddRange (IEnumerable<T> collection);
+public void Insert (int index, T item);
+public void InsertRange (int index, IEnumerable<T> collection);
+// Remove
+public bool Remove (T item);
+public void RemoveAt (int index);
+public void RemoveRange (int index, int count);
+public int RemoveAll (Predicate<T> match);
+// Indexing
+public T this [int index] { get; set; }
+public List<T> GetRange (int index, int count);
+public Enumerator<T> GetEnumerator();
+// Exporting, copying and converting:
+public T[] ToArray();
+public void CopyTo (T[] array);
+public void CopyTo (T[] array, int arrayIndex);
+public void CopyTo (int index, T[] array, int arrayIndex, int count);
+public ReadOnlyCollection<T> AsReadOnly();
+public List<TOutput> ConvertAll<TOutput> (Converter <T,TOutput>
+converter);
+// Other:
+public void Reverse(); // Reverses order of elements in list.
+public int Capacity { get;set; } // Forces expansion of internal array.
+public void TrimExcess(); // Trims internal array back to size.
+public void Clear(); // Removes all elements, so Count=0.
+}
+public delegate TOutput Converter <TInput, TOutput> (TInput input);
+```
+
+In addition to these members, List `<T>` provides instance versions of all of Array’s searching and sorting methods.
+
+***HashSet `<T>` and SortedSet `<T>`***
+
+HashSet `<T>` and SortedSet `<T>` have the following distinguishing features:
+
+1. Their Contains methods execute quickly using a hash-based lookup.
+2. They do not store duplicate elements and silently ignore requests to add duplicates.
+3. You cannot access an element by position.
+   SortedSet `<T>` keeps elements in order, whereas HashSet `<T>` does not.
+   The commonality of the HashSet `<T>` and SortedSet `<T>` types is captured by
+   the interface ISet `<T>`. From .NET 5, these classes also implement an

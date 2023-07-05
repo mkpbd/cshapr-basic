@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,14 @@ namespace Collection.Classes
             words.CopyTo(0, existing, 998, 2);
             List<string> upperCaseWords = words.ConvertAll(s => s.ToUpper());
             List<int> lengths = words.ConvertAll(s => s.Length);
+        }
+
+        public void ListOfArrays()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("hello");
+            string first = (string)al[0];
+            string[] strArr = (string[])al.ToArray(typeof(string));
         }
     }
 }
