@@ -105,5 +105,36 @@ namespace LinQQuires.SimpleQuery
                         orderby noVowel
                         select noVowel;
         }
+        public static void WrappingSementicallyProgressiveQueryBuildings()
+        {
+            string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+            IEnumerable<string> query =
+                        from n in names
+                        select n.Replace("a", "").Replace("e", "").Replace("i", "")
+                        .Replace("o", "").Replace("u", "");
+            query = from n in query where n.Length > 2 orderby n select n;
+
+            // Same As Reformulated in wrapped form, it’s the following
+            IEnumerable<string> query2 =
+                        from n1 in
+                        (
+                        from n2 in names
+                        select n2.Replace("a", "").Replace("e", "").Replace("i", "")
+                        .Replace("o", "").Replace("u", "")
+                        )
+                        where n1.Length > 2
+                        orderby n1
+                        select n1;
+
+            // When converted to fluent syntax, the result is the same linear chain of
+            // operators as in previous examples
+
+            IEnumerable<string> query3 = names
+            .Select(n => n.Replace("a", "").Replace("e", "").Replace("i", "")
+            .Replace("o", "").Replace("u", ""))
+            .Where(n => n.Length > 2)
+            .OrderBy(n => n);
+
+        }
     }
 }

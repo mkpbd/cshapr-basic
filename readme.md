@@ -663,3 +663,151 @@ The only place you can use into is after a select or *group* clause. into “res
 The equivalent of into in fluent syntax is simply a longer chain of operators
 
 ##### Scoping rules
+
+All range variables are out of scope following an into keyword.
+
+```csharp
+var query =
+from n1 in names
+select n1.ToUpper()
+into n2 // Only n2 is visible from here on.
+where n1.Contains ("x") // Illegal: n1 is not in scope.
+select n2;
+```
+
+consider how this maps to fluent syntax
+
+```csharp
+var query = names
+.Select (n1 => n1.ToUpper())
+.Where (n2 => n1.Contains ("x")); // Error: n1 no longer in scope
+```
+
+##### Wrapping Queries
+
+A query built progressively can be formulated into a single statement by wrapping one query around another. In general terms
+
+*var tempQuery = tempQueryExpr
+var finalQuery = from ... in tempQuery ...*
+can be reformulated as:
+*var finalQuery = from ... in (tempQueryExpr)*
+
+Wrapping is semantically identical to progressive query building or using the ***into***keyword (without the intermediate variable). The end result in all cases is a linear chain of query operators.
+
+```csharp
+ string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+            IEnumerable<string> query =
+                        from n in names
+                        select n.Replace("a", "").Replace("e", "").Replace("i", "")
+                        .Replace("o", "").Replace("u", "");
+            query = from n in query where n.Length > 2 orderby n select n;
+
+            // Same As Reformulated in wrapped form, it’s the following
+            IEnumerable<string> query2 =
+                        from n1 in
+                        (
+                        from n2 in names
+                        select n2.Replace("a", "").Replace("e", "").Replace("i", "")
+                        .Replace("o", "").Replace("u", "")
+                        )
+                        where n1.Length > 2
+                        orderby n1
+                        select n1;
+
+            // When converted to fluent syntax, the result is the same linear chain of
+            // operators as in previous examples
+
+            IEnumerable<string> query3 = names
+            .Select(n => n.Replace("a", "").Replace("e", "").Replace("i", "")
+            .Replace("o", "").Replace("u", ""))
+            .Where(n => n.Length > 2)
+            .OrderBy(n => n);
+```
+
+Wrapped queries can be confusing because they resemble the subqueries we wrote earlier. Both have the concept of an inner and outer query. When converted to fluent syntax, however, you can see that wrapping is simply a strategy for sequentially chaining operators. The end result bears no resemblance to a subquery, which embeds an inner query within the lambda expression of another.
+
+#### ***Projection Strategies***
+
+**Object Initializers**
+
+So far, all of our select clauses have projected scalar element types. With C# object initializers, you can project into more complex types. For example, suppose, as a first step in a query, we want to strip vowels from a list of names while still retaining the original versions alongside, for the benefit of subsequent queries. We can write the following class to assist
+
+```csharp
+
+
+  public class TempProjectionItem
+    {
+        public string Original; // Original name
+        public string Vowelless; // Vowel-stripped name
+    }
+
+
+string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+IEnumerable<TempProjectionItem> temp =
+from n in names
+select new TempProjectionItem
+{
+Original = n,
+Vowelless = n.Replace ("a", "").Replace ("e", "").Replace
+("i", "")
+.Replace ("o", "").Replace ("u", "")
+};
+```
+
+##### Anonymous Types
+
+Anonymous types allow you to structure your intermediate results without writing special classes. We can eliminate the TempProjectionItem class in our previous example with anonymous types:
+
+```csharp
+  var intermediate = from n in names
+                               select new
+                               {
+                                   Original = n,
+                                   Vowelless = n.Replace("a", "").Replace("e", "").Replace
+                               ("i", "")
+                               .Replace("o", "").Replace("u", "")
+                               };
+            IEnumerable<string> query = from item in intermediate
+                                        where item.Vowelless.Length > 2
+                                        select item.Original;
+
+
+            var query3 = from n in names
+                         select new
+                         {
+                             Original = n,
+                             Vowelless = n.Replace("a", "").Replace("e", "").Replace("i", "")
+                         .Replace("o", "").Replace("u", "")
+                         }
+                        into temp
+                         where temp.Vowelless.Length > 2
+                         select temp.Original;
+```
+
+**The let Keyword**
+
+The let keyword introduces a new variable alongside the range variable. With let, we can write a query extracting strings whose length, excluding vowels, exceeds two characters, as follows:
+
+```csharp
+  static string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+
+        public static void LetKeyword()
+        {
+            IEnumerable<string> query =
+                from n in names
+                let vowelless = n.Replace("a", "").Replace("e", "").Replace
+                ("i", "")
+                .Replace("o", "").Replace("u", "")
+                where vowelless.Length > 2
+                orderby vowelless
+                select n; // Thanks to let, n is still in scope.
+        }
+```
+
+The compiler resolves a *let* clause by projecting into a temporary anonymous type that contains both the range variable and the new expression variable. In other words, the compiler translates this query into the preceding example.
+
+ let accomplishes two things:
+
+1. It projects new elements alongside existing elements
+2. It allows an expression to be used repeatedly in a query without being rewritten
+3.
