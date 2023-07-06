@@ -518,3 +518,148 @@ foreach (int n in query) Console.WriteLine (n);
 
 Behind the scenes, the foreach calls **GetEnumerator** on **Select's** decorator (the last or outermost operator), which kicks off everything. The
 result is a chain of enumerators that structurally mirrors the chain of  decorator sequences.![1688575942693](image/readme/1688575942693.png)
+
+## Subqueries
+
+A subquery is a query contained within another query’s lambda expression. The following example uses a subquery to sort musicians by their last name:
+
+```csharp
+string[] musos =
+{ "David Gilmour", "Roger Waters", "Rick Wright", "Nick Mason" };
+IEnumerable<string> query = musos.OrderBy (m => m.Split().Last());
+```
+
+**m.Split** converts each string into a collection of words, upon which we then call the Last query operator. **m.Split().Last** is the subquery; query references the outer query.
+
+Subqueries are permitted because you can put any valid C# expression on the righthand side of a lambda. A subquery is simply another C# expression. This means that the rules for subqueries are a consequence of the rules for lambda expressions (and the behavior of query operators in general).
+
+*A subquery is privately scoped to the enclosing expression and can reference parameters in the outer lambda expression (or range variables in a query expression).*
+**m.Split().Last** is a very simple subquery. The next query retrieves all strings in an array whose length matches that of the shortest string:
+
+```csharp
+ string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+            IEnumerable<string> outerQuery = names
+            .Where(n => n.Length == names.OrderBy(n2 => n2.Length)
+            .Select(n2 =>
+            n2.Length).First());
+
+            // Here's the same thing as a Query Expression
+            IEnumerable<string> outerQueryExpression =
+                    from n in names
+                    where n.Length ==
+                    (from n2 in names
+                     orderby n2.Length
+                     select
+                     n2.Length).First()
+                    select n;
+```
+
+Because the outer range variable (n) is in scope for a subquery, we cannot reuse n as the subquery's range variable.
+A subquery is executed whenever the enclosing lambda expression is evaluated. This means that a subquery is executed upon demand, at the discretion of the outer query. You could say that execution proceeds from the outside in. Local queries follow this model literally; interpreted queries
+
+![1688599997228](image/readme/1688599997228.png)
+
+```csharp
+string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+            IEnumerable<string> query =
+                        from n in names
+                        where n.Length == names.OrderBy(n2 => n2.Length).First().Length
+                        select n;
+            // With the Min aggregation function, we can simplify the query further:
+            IEnumerable<string> queryExpression =
+                                    from n in names
+                                    where n.Length == names.Min(n2 => n2.Length)
+                                    select n;
+```
+
+![1688600605015](image/readme/1688600605015.png)
+
+#### Subqueries and Deferred Execution
+
+An element or aggregation operator such as First or Count in a subquery doesn’t force the outer query into immediate execution—deferred execution still holds for the outer query. This is because subqueries are called
+indirectly—through a delegate in the case of a local query, or through an expression tree in the case of an interpreted query.
+
+An interesting case arises when you include a subquery within a Select expression. In the case of a local query, you’re actually projecting a sequence of queries—each itself subject to deferred execution. The effect is generally transparent, and it serves to further improve efficiency
+
+#### Composition Strategies
+
+1. Progressive query construction
+2. Using the **into** keyword
+3. Wrapping queries
+
+**Progressive Query Building**
+
+```csharp
+            string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+            var filtered = names.Where(n => n.Contains("a"));
+            var sorted = filtered.OrderBy(n => n);
+            var query = sorted.Select(n => n.ToUpper());
+```
+
+Because each of the participating query operators returns a decorator sequence, the resultant query is the same chain or layering of decorators that you would get from a single-expression query. There are a couple of potential benefits, however, to building queries progressively:
+
+It can make queries easier to write
+
+You can add query operators conditionally. For example
+
+if (includeFilter) query = query.Where (...)
+
+query = query.Where (n => !includeFilter || `<expression>`)
+
+because it avoids adding an extra query operator if includeFilter is false.
+
+A progressive approach is often useful in query comprehensions. Imagine that we want to remove all vowels from a list of names and then present in alphabetical order those whose length is still more than two characters. In fluent syntax, we could write this query as a single expression—by projecting before we filter:
+
+```csharp
+string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+            IEnumerable<string> query = names
+                        .Select(n => n.Replace("a", "").Replace("e", "").Replace("i", "")
+                        .Replace("o", "").Replace("u", ""))
+                        .Where(n => n.Length > 2)
+                        .OrderBy(n => n);
+            // Dck
+            // Hrry
+            // Mry
+
+            // here's Same as 
+            IEnumerable<string> query2 =
+                            from n in names
+                            where n.Length > 2
+                            orderby n
+                            select n.Replace("a", "").Replace("e", "").Replace("i", "")
+                            .Replace("o", "").Replace("u", "");
+            // Fortunately, there are a number of ways to get the original result in query syntax. 
+            // The first is by querying progressively:
+
+            IEnumerable<string> query3 =
+                            from n in names
+                            select n.Replace("a", "").Replace("e", "").Replace("i", "")
+                            .Replace("o", "").Replace("u", "");
+            query3 = from n in query3 where n.Length > 2 orderby n select n;
+```
+
+##### **The *into* Keyword**
+
+The into keyword is interpreted in two very different ways by query expressions, depending on context. The meaning we’re describing now is for signaling query continuation (the other is for signaling a *GroupJoin*).
+
+The into keyword lets you “continue” a query after a projection and is a shortcut for progressively querying. With into, we can rewrite the preceding query as follows:
+
+```csharp
+  string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
+            IEnumerable<string> query =
+                        from n in names
+                        select n.Replace("a", "").Replace("e", "").Replace("i", "")
+                        .Replace("o", "").Replace("u", "")
+                        into noVowel
+                        where noVowel.Length > 2
+                        orderby noVowel
+                        select noVowel;
+```
+
+The only place you can use into is after a select or *group* clause. into “restarts” a query, allowing you to introduce fresh *where*, *orderby*, and *select* clauses.
+
+*Although it’s easiest to think of into as restarting a query from the perspective of a query expression, it’s all one query when translated to its final fluent form. Hence, there’s no intrinsic performance hit with into. Nor do you lose any points for its use!*
+
+The equivalent of into in fluent syntax is simply a longer chain of operators
+
+##### Scoping rules
