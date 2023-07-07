@@ -13,7 +13,8 @@ namespace LinqEFCore
         {
 
               DatabaseQuery databaseQuery = new DatabaseQuery();
-            databaseQuery.GetDataOrderBy();
+            //databaseQuery.GetDataOrderBy();
+            databaseQuery.SaveDataBaseOnCutomerTableInPurchase();
 
             Console.Read();
         }

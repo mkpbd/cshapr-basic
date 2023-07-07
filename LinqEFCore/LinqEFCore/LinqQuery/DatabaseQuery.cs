@@ -21,10 +21,10 @@ namespace LinqEFCore.LinqQuery
             //db.SavingChanges();
             //_db.Set<T>().Add(entity);
 
-            using(var db = new NutShellContext())
+            using (var db = new NutShellContext())
             {
                 db.Customers.Add(entity);
-              //  db.SavingChanges();
+                //  db.SavingChanges();
             }
 
 
@@ -40,22 +40,19 @@ namespace LinqEFCore.LinqQuery
 
                 Console.WriteLine("Name " + a.Name + " Id " + b.ID);
             }
-         
+
         }
 
         public void SaveDataBaseOnCutomerTableInPurchase()
         {
             using (var dbContext = new NutShellContext())
             {
-                
-                
-          
-            Customer cust = dbContext.Customers.FirstOrDefault(c => c.ID == 1);
-            Purchase p1 = new Purchase { Description = "Bike", Price = 500, CustomerID = 1 };
-            Purchase p2 = new Purchase { Description = "Tools", Price = 100 };
-                dbContext?.Purchases.Add(p1);
-                dbContext?.Purchases.Add(p2);
-            dbContext.SaveChanges();
+                Customer cust = dbContext.Customers.FirstOrDefault(c => c.ID == 1);
+                Purchase p1 = new Purchase { Description = "Bike", Price = 500 };
+                Purchase p2 = new Purchase { Description = "Tools", Price = 100 };
+                cust?.Purchases.Add(p1);
+                cust?.Purchases.Add(p2);
+                dbContext.SaveChanges();
             }
         }
     }
